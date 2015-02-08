@@ -1,8 +1,10 @@
 #! /usr/local/bin/python
 
 import socket
-import struct
 import random
+import time
+
+from utils import send_variable_length, recv_variable_length
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -11,12 +13,17 @@ s.connect(addr)
 
 multiplier = random.randint(0, 100)
 msg = " ".join(["PING"]*multiplier)
-msgLen = len(msg)
 
-print "sending '{}' ({} 'PINGs') with a message length of {}".format(msg, multiplier, msgLen)
+print "sending '{}' ({} 'PINGs')".format(msg, multiplier)
+start_time = time.clock()
+send_variable_length(s, msg)
 
-s.send(struct.pack("i", msgLen))
-s.send(msg)
-
-data = s.recv(4)
+data = recv_variable_length(s)
 print "recieved: {}".format(data)
+
+count = data.count("PONG")
+if count == multiplier:
+    time = time.clock() - start_time
+    print "Revieved the correct response"
+    print "Full round trip time is {} seconds".format(time)
+

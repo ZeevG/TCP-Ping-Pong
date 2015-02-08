@@ -2,7 +2,8 @@
 
 import socket
 import threading
-import struct
+
+from utils import recv_variable_length, send_variable_length
 
 
 def main():
@@ -23,23 +24,20 @@ def main():
         #now do something with the clientsocket
         #in this case, we'll pretend this is a threaded server
 
-        t = threading.Thread(target=handleClient, args=(clientsocket, client_num))
+        t = threading.Thread(target=handle_client, args=(clientsocket, client_num))
         t.run()
 
         client_num += 1
 
 
-def handleClient(socket, ident):
-    data = socket.recv(4)
-    print "Attempting to unpack a python struct - {}".format(data)
-    (msg,) = struct.unpack("i", data)
-    print "decoded '{0}'".format(msg)
+def handle_client(socket, ident):
+    data = recv_variable_length(socket)
+    print "Recieved {}".format(data)
 
-    print "Reading {0} more bytes".format(msg)
-    data = socket.recv(int(msg))
-    print data
+    count = data.count("PING")
+    message = " ".join(["PONG"]*count)
 
-
+    send_variable_length(socket, message)
 
 
 if __name__ == "__main__":
