@@ -2,6 +2,7 @@
 
 import socket
 import threading
+import struct
 
 
 def main():
@@ -30,9 +31,15 @@ def main():
 
 def handleClient(socket, ident):
     data = socket.recv(4)
-    if data == "PING":
-        print "Recieved a PING - sending a PONG"
-        socket.send("PONG")
+    print "Attempting to unpack a python struct - {}".format(data)
+    (msg,) = struct.unpack("i", data)
+    print "decoded '{0}'".format(msg)
+
+    print "Reading {0} more bytes".format(msg)
+    data = socket.recv(int(msg))
+    print data
+
+
 
 
 if __name__ == "__main__":
