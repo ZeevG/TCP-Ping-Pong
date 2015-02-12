@@ -14,12 +14,12 @@ s.connect(addr)
 multiplier = random.randint(0, 100)
 msg = " ".join(["PING"]*multiplier)
 
-print "sending '{}' ({} 'PINGs')".format(msg, multiplier)
+print "Sending: '{}' ({} 'PINGs')".format(msg, multiplier)
 start_time = time.clock()
 send_variable_length(s, msg)
 
 data = recv_variable_length(s)
-print "recieved: {}".format(data)
+print "Recieved: '{}'".format(data)
 
 count = data.count("PONG")
 if count == multiplier:

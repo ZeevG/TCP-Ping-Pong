@@ -3,10 +3,10 @@ import struct
 
 def recv_variable_length(socket):
     data = socket.recv(4)
-    print "Attempting to unpack a python struct"
+    # print "Attempting to unpack a python struct"
     (msg,) = struct.unpack("i", data)
 
-    print "Reading {0} more bytes".format(msg)
+    # print "Reading {0} more bytes".format(msg)
     data = socket.recv(int(msg))
     return data
 
