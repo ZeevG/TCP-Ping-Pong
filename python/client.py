@@ -22,8 +22,14 @@ data = recv_variable_length(s)
 print "Recieved: '{}'".format(data)
 
 count = data.count("PONG")
-if count == multiplier:
-    time = time.clock() - start_time
-    print "Revieved the correct response"
-    print "Full round trip time is {} seconds".format(time)
 
+trip_time = time.clock() - start_time
+
+if count == multiplier:
+    print "Recieved the correct response"
+else:
+    print "Problemo!"
+    print "Recieved an INCORRECT response."
+    print "Sent {} PINGs recieved {} PONGs".format(multiplier, count)
+
+print "Full round trip time is {} seconds".format(trip_time)
