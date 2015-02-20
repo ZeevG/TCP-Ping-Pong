@@ -6,8 +6,14 @@ def recv_variable_length(socket):
     # print "Attempting to unpack a python struct"
     (msg,) = struct.unpack("i", data)
 
-    # print "Reading {0} more bytes".format(msg)
-    data = socket.recv(int(msg))
+    data = ""
+    remaining = int(msg)
+    while remaining > 0:
+        print "recv loop"
+        recieved = socket.recv(remaining)
+        remaining = remaining - len(recieved)
+        data += recieved
+
     return data
 
 

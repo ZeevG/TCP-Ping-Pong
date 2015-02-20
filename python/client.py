@@ -11,15 +11,15 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 addr = ("localhost", 8765)
 s.connect(addr)
 
-multiplier = random.randint(0, 100)
+multiplier = random.randint(10000000, 30000000)
 msg = " ".join(["PING"]*multiplier)
 
-print "Sending: '{}' ({} 'PINGs')".format(msg, multiplier)
+print "Sending: '{}' ({} 'PINGs')".format(msg[:100], multiplier)
 start_time = time.clock()
 send_variable_length(s, msg)
 
 data = recv_variable_length(s)
-print "Recieved: '{}'".format(data)
+# print "Recieved: '{}'".format(data)
 
 count = data.count("PONG")
 

@@ -9,7 +9,6 @@
 
 int main(int argc, char* argv []){  
 
-    int client_no = 0;
     struct sockaddr_in my_addr;
     int s;
 
@@ -28,7 +27,7 @@ int main(int argc, char* argv []){
         print_error();
     }
 
-    if(listen(s, 5)){
+    if(listen(s, 5) < 0){
         print_error();
     }
 
@@ -41,17 +40,14 @@ int main(int argc, char* argv []){
 
         printf("waiting for a client to connect...\n");
         client_socket = accept(s, &client_addr, &addr_len);
+        printf("Accepted client connection");
         if(client_socket < 0){
             print_error();
         }
         
-        client_no++;
-
         // Recieve payload. Internally uses malloc.
         payload = recieve(client_socket);
         payload_size = strlen(payload);
-        printf("Recieved: %s\n", payload);
-        
 
         // Add 1 to the payload size 
         // Just call each PING 5 chars to account for space
@@ -63,7 +59,7 @@ int main(int argc, char* argv []){
         
         for(int ii = 0; ii < num_pings; ii++){
             
-            // Check the payload contains "PING" in the expected location
+            // Check the payload contains "PING" in the expected locations
             if(strncmp(payload+(ii*5), "PING", 4) == 0){
                 
                 if(ii < num_pings - 1){
@@ -77,11 +73,13 @@ int main(int argc, char* argv []){
         
         // send the response to the client
         send_response(client_socket, response);
-
+        
+        //free the payload & response
+        free(payload);
+        free(response);
+        
+        printf("Client request completed.");
     }
-
-
-
     return 0;
 }
 
